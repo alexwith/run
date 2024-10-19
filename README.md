@@ -6,3 +6,7 @@
 <p align="center">
   <strong>Execute code quickly in the browser ⚡</strong>
 </p>
+
+---
+
+## The Project
