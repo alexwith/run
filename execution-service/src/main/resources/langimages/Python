@@ -1,0 +1,9 @@
+FROM python:3.9-alpine
+
+WORKDIR /run
+
+ARG content=""
+
+RUN echo "$content" > code.py
+
+CMD ["python", "code.py"]

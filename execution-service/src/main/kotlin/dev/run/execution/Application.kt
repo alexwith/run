@@ -1,9 +1,11 @@
-package dev.run
+package dev.run.execution
 
-import dev.run.plugins.*
+import dev.run.execution.routes.routes
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
@@ -11,5 +13,10 @@ fun main() {
 }
 
 fun Application.module() {
-    configureRouting()
+
+    install(ContentNegotiation) {
+        json()
+    }
+
+    routes()
 }
