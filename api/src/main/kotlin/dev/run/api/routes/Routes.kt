@@ -1,4 +1,4 @@
-package dev.run.execution.routes
+package dev.run.api.routes
 
 import io.ktor.http.*
 import io.ktor.server.application.*

@@ -1,6 +1,6 @@
-package dev.run.execution
+package dev.run.api
 
-import dev.run.execution.routes.routes
+import dev.run.api.routes.routes
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
