@@ -5,6 +5,10 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.io.IOException
 import kotlinx.serialization.Serializable
 import java.io.BufferedReader
@@ -13,9 +17,18 @@ import java.util.concurrent.TimeUnit
 import kotlin.io.path.toPath
 
 
+var test: WebSocketSession? = null
+
 fun Application.routes() {
     routing {
         executeRoute()
+
+        webSocket("/test") {
+            test = this
+
+            while (true) {
+            }
+        }
     }
 }
 
@@ -34,7 +47,12 @@ fun runCommand(vararg command: String, readOutput: Boolean) {
 
             var outputLine: String?
             while ((inputStream.readLine().also { outputLine = it }) != null) {
-                println(outputLine)
+                val ting = outputLine
+                runBlocking {
+                    launch {
+                        test?.send(ting!!)
+                    }
+                }
             }
         }
 
