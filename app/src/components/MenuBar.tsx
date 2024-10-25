@@ -11,9 +11,9 @@ export default function MenuBar() {
 
   const handleRunClick = () => {
     clearTerminal();
-    setProgramStatus("");
+    setProgramStatus(null);
 
-    const socket = new WebSocket(`ws://localhost:8080/socket/v1/execute?language=${"Python"}`);
+    const socket = new WebSocket(`ws://localhost:8080/socket/v1/execute?language=${"kotlin"}`);
     socket.onmessage = (event) => {
       const { data } = event;
       switch (data) {

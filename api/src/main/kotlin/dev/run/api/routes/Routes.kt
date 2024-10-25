@@ -44,11 +44,14 @@ fun Route.execute() {
         }
 
         this.send("run:building")
+
         runCommand(
             "docker", "build", "--build-arg", "content=${code}", "-t", "test", "-f", url.toURI().toPath().toString(), "" +
                     ".", socket = null
         )
+
         this.send("run:running")
+
         runCommand("docker", "run", "--rm", "--tty", "test", socket = this)
         runCommand("docker", "rmi", "-f", "test", socket = null)
     }

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { ProgramStatus } from "../common/types";
+import { codeExamples } from "../common/codeExamples";
 
 interface State {
   code: string;
@@ -9,18 +10,18 @@ interface State {
 
 interface Actions {
   setCode: (code: string) => void;
-  setProgramStatus: (status: ProgramStatus) => void;
+  setProgramStatus: (status: ProgramStatus | null) => void;
   addToTerminal: (line: string) => void;
   clearTerminal: () => void;
 }
 
 export const useStore = create<State & Actions>((set) => ({
-  code: 'print("Hello World")',
+  code: codeExamples.get("kotlin")!,
   programStatus: null,
   terminal: [],
 
   setCode: (code: string) => set(() => ({ code })),
-  setProgramStatus: (status: ProgramStatus) => set(() => ({ programStatus: status })),
+  setProgramStatus: (status: ProgramStatus | null) => set(() => ({ programStatus: status })),
   addToTerminal: (line: string) => set((state) => ({ terminal: [...state.terminal, line] })),
   clearTerminal: () => set(() => ({ terminal: [] })),
 }));
