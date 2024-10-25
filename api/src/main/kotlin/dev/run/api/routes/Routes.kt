@@ -10,39 +10,58 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.IOException
-import kotlinx.serialization.Serializable
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
 import kotlin.io.path.toPath
 
-
-var test: WebSocketSession? = null
-
 fun Application.routes() {
     routing {
-        executeRoute()
-
-        webSocket("/test") {
-            test = this
-
-            while (true) {
-            }
-        }
+        execute()
     }
 }
 
-@Serializable
-data class Execution(val language: String, val code: String)
+fun Route.execute() {
+    webSocket("/socket/v1/execute") {
+        val language = this.call.parameters["language"]
 
-fun runCommand(vararg command: String, readOutput: Boolean) {
+        this.send("run:ready")
+
+        var code: String? = null
+        for (frame in this.incoming) {
+            frame as? Frame.Text ?: continue
+            code = frame.readText()
+            break
+        }
+
+        if (code == null) {
+            return@webSocket
+        }
+
+        val url = this.javaClass.getResource("/langimages/$language")
+        if (url == null) {
+            return@webSocket
+        }
+
+        this.send("run:building")
+        runCommand(
+            "docker", "build", "--build-arg", "content=${code}", "-t", "test", "-f", url.toURI().toPath().toString(), "" +
+                    ".", socket = null
+        )
+        this.send("run:running")
+        runCommand("docker", "run", "--rm", "--tty", "test", socket = this)
+        runCommand("docker", "rmi", "-f", "test", socket = null)
+    }
+}
+
+fun runCommand(vararg command: String, socket: WebSocketSession?) {
     try {
         val process = ProcessBuilder(*command)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
             .redirectError(ProcessBuilder.Redirect.PIPE)
             .start()
 
-        if (readOutput) {
+        if (socket != null) {
             val inputStream = BufferedReader(InputStreamReader(process.inputStream))
 
             var outputLine: String?
@@ -50,7 +69,7 @@ fun runCommand(vararg command: String, readOutput: Boolean) {
                 val ting = outputLine
                 runBlocking {
                     launch {
-                        test?.send(ting!!)
+                        socket.send(ting!!)
                     }
                 }
             }
@@ -59,26 +78,5 @@ fun runCommand(vararg command: String, readOutput: Boolean) {
         process.waitFor(60, TimeUnit.MINUTES)
     } catch (e: IOException) {
         e.printStackTrace()
-    }
-}
-
-fun Route.executeRoute() {
-    post("/api/v1/execute") {
-        val execution = call.receive<Execution>()
-
-        val url = this.javaClass.getResource("/langimages/Python")
-        if (url == null) {
-            call.respond(HttpStatusCode.InternalServerError)
-            return@post
-        }
-
-        call.respond(HttpStatusCode.OK)
-
-        runCommand(
-            "docker", "build", "--build-arg", "content=${execution.code}", "-t", "test", "-f", url.toURI().toPath().toString(), "" +
-                    ".", readOutput = false
-        )
-        runCommand("docker", "run", "--rm", "--tty", "test", readOutput = true)
-        runCommand("docker", "rmi", "-f", "test", readOutput = false)
     }
 }
