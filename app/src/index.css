@@ -13,5 +13,5 @@
     -moz-osx-font-smoothing: grayscale;
 
     color-scheme: dark;
-    background-color: #0e0f14;
+    background-color: theme("colors.dark");
 }

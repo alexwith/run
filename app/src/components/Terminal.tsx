@@ -7,10 +7,10 @@ export default function Terminal() {
   const programStatus = useStore((state) => state.programStatus);
 
   return (
-    <div className="border-[1px] border-zinc-800 rounded-lg overflow-hidden bg-[#1A1B26] text-white text-sm p-2 font-[Tahoma]">
+    <div className="border-[1px] border-light-gray rounded-lg overflow-hidden bg-gray text-white text-sm p-2 font-[Tahoma]">
       <div className="flex justify-between">
         <h1 className="font-bold text-indigo-200">Terminal</h1>
-        {programStatus && <p className="text-xs text-sky-500 font-bold">{programStatus}</p>}
+        {programStatus && <p className="text-xs text-sky-400 font-bold">{programStatus}</p>}
       </div>
       <div className="flex flex-col gap-1">
         {terminal.map((line, i) => (

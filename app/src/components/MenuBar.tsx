@@ -1,8 +1,11 @@
 import { RunIcon } from "../common/icons";
 import { ProgramStatus } from "../common/types";
 import { useStore } from "../store/store";
+import Button from "./common/Button";
+import LanguageSelector from "./LanguageSelector";
 
 export default function MenuBar() {
+  const language = useStore((state) => state.language);
   const code = useStore((state) => state.code);
 
   const setProgramStatus = useStore((actions) => actions.setProgramStatus);
@@ -13,7 +16,9 @@ export default function MenuBar() {
     clearTerminal();
     setProgramStatus(null);
 
-    const socket = new WebSocket(`ws://localhost:8080/socket/v1/execute?language=${"kotlin"}`);
+    const socket = new WebSocket(
+      `ws://localhost:8080/socket/v1/execute?language=${language.image}`,
+    );
     socket.onmessage = (event) => {
       const { data } = event;
       switch (data) {
@@ -42,11 +47,9 @@ export default function MenuBar() {
   };
 
   return (
-    <div
-      className="flex items-center gap-1 bg-sky-500 text-white font-bold w-fit px-2 rounded-md hover:cursor-pointer"
-      onClick={handleRunClick}
-    >
-      <span>Run</span> <RunIcon size={14} />
+    <div className="flex justify-between">
+      <Button name="Run" icon={<RunIcon size={14} />} onClick={handleRunClick} />
+      <LanguageSelector />
     </div>
   );
 }

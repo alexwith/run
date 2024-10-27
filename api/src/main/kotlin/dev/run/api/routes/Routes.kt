@@ -64,6 +64,8 @@ fun runCommand(vararg command: String, socket: WebSocketSession?) {
             .redirectError(ProcessBuilder.Redirect.PIPE)
             .start()
 
+        println(command.joinToString(" "))
+
         if (socket != null) {
             val inputStream = BufferedReader(InputStreamReader(process.inputStream))
 
