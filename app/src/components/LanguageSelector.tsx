@@ -25,9 +25,9 @@ export default function LanguageSelector() {
     >
       <Button name={language.name} icon={<CodeIcon size={14} />} />
       {hovering && (
-        <div className="flex flex-col absolute z-10 bg-light-gray w-[150px] rounded-md right-0 py-1 px-2">
+        <div className="flex flex-col absolute z-10 bg-gray border-[1px] border-light-gray w-[150px] rounded-md right-0 py-1 px-2">
           <input
-            className="text-sm appearance-none focus:outline-none bg-transparent mb-1"
+            className="text-sm appearance-none focus:outline-none bg-transparent mb-1 pb-1 border-b-[1px] border-light-gray"
             type="text"
             placeholder="Search language"
             onChange={(event) => setFilter(event.currentTarget.value.toLowerCase())}
@@ -38,7 +38,7 @@ export default function LanguageSelector() {
               .map((language, i) => (
                 <p
                   key={i}
-                  className="text-sm font-semibold hover:cursor-pointer hover:text-sky-400"
+                  className="text-zinc-400 text-sm font-semibold hover:cursor-pointer hover:text-sky-400"
                   onClick={() => handleLanguageClick(language)}
                 >
                   {language.name}

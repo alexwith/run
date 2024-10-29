@@ -1,7 +1,7 @@
 import { MouseEvent, ReactNode } from "react";
 
 type Props = {
-  name: string;
+  name?: string;
   icon?: ReactNode;
   onClick?: (event: MouseEvent) => void;
   onMouseEnter?: (event: MouseEvent) => void;
@@ -16,7 +16,8 @@ export default function Button({ name, icon, onClick, onMouseEnter, onMouseLeave
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <span>{name}</span> {icon}
+      {name && <span>{name}</span>}
+      {icon}
     </div>
   );
 }

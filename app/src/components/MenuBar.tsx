@@ -1,4 +1,4 @@
-import { RunIcon } from "../common/icons";
+import { RunIcon, SettingsIcon } from "../common/icons";
 import { ProgramStatus } from "../common/types";
 import { useStore } from "../store/store";
 import Button from "./common/Button";
@@ -49,7 +49,10 @@ export default function MenuBar() {
   return (
     <div className="flex justify-between">
       <Button name="Run" icon={<RunIcon size={14} />} onClick={handleRunClick} />
-      <LanguageSelector />
+      <div className="flex gap-2">
+        <LanguageSelector />
+        <Button icon={<SettingsIcon size={20} />} />
+      </div>
     </div>
   );
 }
