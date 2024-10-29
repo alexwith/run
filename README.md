@@ -1,10 +1,10 @@
-<a href="https://dogehouse.tv">
+<a href="https://alexwith.com">
     <p align="center">
         <img height=100 src="./assets/logo.png"/>
     </p>
 </a>
 <p align="center">
-  <strong>Execute code quickly in the browser ⚡</strong>
+  <strong>Execute code quickly in the browser!</strong>
 </p>
 
 ---
