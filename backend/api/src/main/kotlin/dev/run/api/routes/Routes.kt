@@ -1,19 +1,18 @@
 package dev.run.api.routes
 
-import io.ktor.http.*
+import dev.run.api.entity.Execution
+import dev.run.worker.manager.QueueManager
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.io.IOException
+import org.koin.ktor.ext.inject
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
-import kotlin.io.path.toPath
 
 fun Application.routes() {
     routing {
@@ -22,6 +21,8 @@ fun Application.routes() {
 }
 
 fun Route.execute() {
+    val queueManager by inject<QueueManager>()
+
     webSocket("/socket/v1/execute") {
         val language = this.call.parameters["language"]
 
@@ -43,7 +44,8 @@ fun Route.execute() {
             return@webSocket
         }
 
-        this.send("run:building")
+        queueManager.enqueue(Execution("python", "hello"))
+        /*this.send("run:building")
 
         runCommand(
             "docker", "build", "--build-arg", "content=${code}", "-t", "test", "-f", url.toURI().toPath().toString(), "" +
@@ -53,7 +55,7 @@ fun Route.execute() {
         this.send("run:running")
 
         runCommand("docker", "run", "--rm", "--tty", "test", socket = this)
-        runCommand("docker", "rmi", "-f", "test", socket = null)
+        runCommand("docker", "rmi", "-f", "test", socket = null)*/
     }
 }
 
