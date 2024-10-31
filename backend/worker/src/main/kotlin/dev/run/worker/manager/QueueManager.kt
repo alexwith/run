@@ -1,42 +1,25 @@
 package dev.run.worker.manager
 
-import com.rabbitmq.client.*
-import org.koin.core.component.KoinComponent
+import com.rabbitmq.client.DeliverCallback
+import com.rabbitmq.client.Delivery
+import dev.run.common.entity.Execution
+import dev.run.common.manager.AbstractQueueManager
+import kotlinx.serialization.json.Json
 
-class QueueManager : KoinComponent {
-    private val connection = this.createConnection()
+class QueueManager : AbstractQueueManager() {
 
     init {
-        val channel = connection.createChannel()
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null)
-        channel.basicQos(1)
+        this.initConsumer()
+    }
 
-        val consumer = object : DefaultConsumer(channel) {
+    private fun initConsumer() {
+        val deliverCallback = DeliverCallback { _, delivery: Delivery ->
+            val json = String(delivery.body, charset("UTF-8"))
+            val execution = Json.decodeFromString<Execution>(json)
 
-            override fun handleDelivery(consumerTag: String, envelope: Envelope, properties: AMQP.BasicProperties, body: ByteArray) {
-                val message = String(body)
-
-                println("received message: $message")
-
-                try {
-                    // TODO: run logic
-                } finally {
-                    channel.basicAck(envelope.deliveryTag, false)
-                }
-            }
+            println("execution: ${execution.image}")
         }
 
-        channel.basicConsume(QUEUE_NAME, true, consumer)
-    }
-
-    private fun createConnection(): Connection {
-        val connectionFactory = ConnectionFactory()
-        connectionFactory.host = "localhost"
-
-        return connectionFactory.newConnection()
-    }
-
-    companion object {
-        const val QUEUE_NAME = "execution-queue"
+        this.channel.basicConsume(QUEUE_NAME, true, deliverCallback) { _ -> }
     }
 }

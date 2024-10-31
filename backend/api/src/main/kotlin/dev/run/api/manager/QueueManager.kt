@@ -1,28 +1,14 @@
-package dev.run.worker.manager
+package dev.run.api.manager
 
-import com.rabbitmq.client.Connection
-import com.rabbitmq.client.ConnectionFactory
-import dev.run.api.entity.Execution
-import org.koin.core.component.KoinComponent
+import dev.run.common.entity.Execution
+import dev.run.common.manager.AbstractQueueManager
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-class QueueManager : KoinComponent {
-    val connection = this.createConnection()
+class QueueManager : AbstractQueueManager() {
 
     fun enqueue(execution: Execution) {
-        val channel = connection.createChannel()
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null)
-        channel.basicPublish("", QUEUE_NAME, null, "hello".toByteArray())
-        println("sent message")
-    }
-
-    private fun createConnection(): Connection {
-        val connectionFactory = ConnectionFactory()
-        connectionFactory.host = "localhost"
-
-        return connectionFactory.newConnection()
-    }
-
-    companion object {
-        const val QUEUE_NAME = "execution-queue"
+        val json = Json.encodeToString(execution)
+        this.channel.basicPublish("", QUEUE_NAME, null, json.toByteArray())
     }
 }

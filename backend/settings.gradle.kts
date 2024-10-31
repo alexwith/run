@@ -4,3 +4,4 @@ plugins {
 rootProject.name = "run"
 include("api")
 include("worker")
+include("common")

@@ -1,7 +1,7 @@
 package dev.run.api.routes
 
-import dev.run.api.entity.Execution
-import dev.run.worker.manager.QueueManager
+import dev.run.common.entity.Execution
+import dev.run.api.manager.QueueManager
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -12,6 +12,7 @@ import org.koin.ktor.ext.inject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 fun Application.routes() {
@@ -25,6 +26,9 @@ fun Route.execute() {
 
     webSocket("/socket/v1/execute") {
         val language = this.call.parameters["language"]
+        if (language == null) {
+            return@webSocket
+        }
 
         this.send("run:ready")
 
@@ -44,7 +48,8 @@ fun Route.execute() {
             return@webSocket
         }
 
-        queueManager.enqueue(Execution("python", "hello"))
+        val id = UUID.randomUUID().toString()
+        queueManager.enqueue(Execution(id, language, code))
         /*this.send("run:building")
 
         runCommand(
