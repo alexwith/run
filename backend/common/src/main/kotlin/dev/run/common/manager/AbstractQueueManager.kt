@@ -3,9 +3,8 @@ package dev.run.common.manager
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
-import org.koin.core.component.KoinComponent
 
-abstract class AbstractQueueManager : KoinComponent {
+abstract class AbstractQueueManager {
     protected val connection = this.createConnection()
     protected val channel: Channel = this.connection.createChannel()
 

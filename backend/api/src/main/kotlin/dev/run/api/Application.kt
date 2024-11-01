@@ -1,7 +1,9 @@
 package dev.run.api
 
 import dev.run.api.manager.QueueManager
+import dev.run.api.manager.execution.ExecutionManager
 import dev.run.api.routes.routes
+import dev.run.common.manager.language.LanguageManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -34,6 +36,8 @@ fun installKoin(app: Application) {
         modules(
             module {
                 single { QueueManager() }
+                single { LanguageManager() }
+                single { ExecutionManager() }
             }
         )
     }

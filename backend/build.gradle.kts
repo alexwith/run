@@ -29,6 +29,7 @@ subprojects {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
         implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
         implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+        implementation("io.ktor:ktor-network:$ktor_version")
         implementation("com.rabbitmq:amqp-client:5.22.0")
         implementation("io.insert-koin:koin-core:4.0.0")
         implementation("io.insert-koin:koin-ktor:4.0.0")
