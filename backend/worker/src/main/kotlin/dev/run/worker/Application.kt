@@ -2,6 +2,7 @@ package dev.run.worker
 
 import dev.run.common.manager.language.LanguageManager
 import dev.run.worker.manager.DockerManager
+import dev.run.worker.manager.ExecutionManager
 import dev.run.worker.manager.QueueManager
 import dev.run.worker.routes.routes
 import io.ktor.server.application.*
@@ -28,6 +29,7 @@ fun installKoin(app: Application) {
                 single { QueueManager() }
                 single { DockerManager() }
                 single { LanguageManager() }
+                single { ExecutionManager() }
             }
         )
     }

@@ -34,15 +34,19 @@ export default function MenuBar() {
           setProgramStatus(ProgramStatus.Running);
           break;
         }
+        case "run:failed": {
+          setProgramStatus(ProgramStatus.Failed);
+          break;
+        }
+        case "run:executed": {
+          setProgramStatus(ProgramStatus.Executed);
+          break;
+        }
         default: {
           addToTerminal(event.data);
           break;
         }
       }
-    };
-
-    socket.onclose = () => {
-      setProgramStatus(ProgramStatus.Executed);
     };
   };
 

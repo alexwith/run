@@ -1,6 +1,8 @@
 package dev.run.api.manager.execution
 
+import dev.run.api.manager.QueueManager
 import dev.run.api.manager.execution.entity.ApiExecution
+import dev.run.common.manager.language.LanguageManager
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
@@ -8,9 +10,14 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import java.util.*
 
-class ExecutionManager {
+class ExecutionManager : KoinComponent {
     private val executions = HashMap<String, ApiExecution>()
+    private val queueManager by inject<QueueManager>()
+    private val languageManager by inject<LanguageManager>()
 
     init {
         val serverSocket = aSocket(SelectorManager(Dispatchers.IO)).tcp().bind("127.0.0.1", 8083)
@@ -27,33 +34,61 @@ class ExecutionManager {
                         return@launch
                     }
 
-                    while (true) {
-                        val name = readChannel.readUTF8Line()
-                        val args = name?.split(":")
-                        if (name == null || args == null || args[0] != "run") {
-                            socket.close()
-                            execution.socketFuture.complete(null)
-                            break
-                        }
-
-                        val executionSocket = execution.socket
-
-                        val action = args[1]
-                        when (action) {
-                            "building" -> executionSocket.send("run:building")
-                            "running" -> executionSocket.send("run:running")
-                            "output" -> {
-                                val outputLine = args[2]
-                                executionSocket.send(outputLine)
-                            }
-                        }
-                    }
+                    this@ExecutionManager.listenToWorker(socket, readChannel, execution)
                 }
             }
         }
     }
 
-    fun registerExecution(execution: ApiExecution) {
-        this.executions[execution.id] = execution
+    suspend fun execute(language: String, socket: WebSocketSession) {
+        socket.send("run:ready")
+
+        var code: String? = null
+        for (frame in socket.incoming) {
+            frame as? Frame.Text ?: continue
+            code = frame.readText()
+            break
+        }
+
+        if (code == null) {
+            return
+        }
+
+        if (languageManager.getLanguage(language) == null) {
+            return
+        }
+
+        val id = UUID.randomUUID().toString()
+        val execution = ApiExecution(id, language, code, socket)
+        this.executions[id] = execution
+        this.queueManager.enqueue(execution)
+
+        execution.await()
+    }
+
+    private suspend fun listenToWorker(worker: Socket, channel: ByteReadChannel, execution: ApiExecution) {
+        while (true) {
+            val name = channel.readUTF8Line()
+            val args = name?.split(":")
+            if (name == null || args == null || args[0] != "run") {
+                worker.close()
+                execution.socketFuture.complete(null)
+                break
+            }
+
+            val executionSocket = execution.socket
+
+            val action = args[1]
+            when (action) {
+                "building" -> executionSocket.send("run:building")
+                "running" -> executionSocket.send("run:running")
+                "failed" -> executionSocket.send("run:failed")
+                "executed" -> executionSocket.send("run:executed")
+                "output" -> {
+                    val outputLine = args[2]
+                    executionSocket.send(outputLine)
+                }
+            }
+        }
     }
 }

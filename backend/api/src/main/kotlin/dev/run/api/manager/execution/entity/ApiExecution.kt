@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture
 class ApiExecution(val id: String, val language: String, val code: String, val socket: WebSocketSession) {
     val socketFuture = CompletableFuture<Unit>()
 
-    fun block() {
+    fun await() {
         this.socketFuture.join()
     }
 
