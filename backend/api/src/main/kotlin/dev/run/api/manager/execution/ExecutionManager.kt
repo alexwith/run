@@ -85,7 +85,8 @@ class ExecutionManager : KoinComponent {
                 "failed" -> executionSocket.send("run:failed")
                 "executed" -> executionSocket.send("run:executed")
                 "output" -> {
-                    val outputLine = args[2]
+                    val lastProtocolColonIndex = name.indexOf(":", 4) + 1
+                    val outputLine = name.substring(lastProtocolColonIndex)
                     executionSocket.send(outputLine)
                 }
             }

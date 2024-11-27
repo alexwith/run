@@ -55,8 +55,8 @@ export default function CodeEditor() {
   return (
     <div className="border-[1px] border-light-gray rounded-lg overflow-hidden shadow-[0px_0px_35px_5px_rgba(56,_189,_248,_0.05)]">
       <CodeMirror
-        height="300px"
-        width="500px"
+        height="350px"
+        width="650px"
         value={code}
         extensions={[pythonLanguage]}
         theme={myTheme}
