@@ -5,6 +5,5 @@ WORKDIR /run
 ARG content=""
 
 RUN echo "$content" > Main.java
-RUN javac Main.java
 
-CMD ["java", "Main"]
+CMD ["/bin/sh", "-c", "javac Main.java && java Main"]
