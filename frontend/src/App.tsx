@@ -21,7 +21,7 @@ function App() {
             Execute code quickly in the browser!
           </p>
         </div>
-        <div className="flex flex-col gap-2 w-fit">
+        <div className="flex flex-col gap-2 w-[650px]">
           <MenuBar />
           <CodeEditor />
           <Terminal />
