@@ -16,10 +16,3 @@ languages.set("java", {
   }
 }`,
 });
-languages.set("kotlin", {
-  name: "Kotlin",
-  image: "kotlin",
-  example: `fun main() {
-  println("Hello, World!")
-}`,
-});
