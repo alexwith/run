@@ -10,3 +10,6 @@
 ---
 
 ## The Project
+
+## Preview
+![preview](assets/preview.gif "Preview")
