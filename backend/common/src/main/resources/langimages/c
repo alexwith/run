@@ -1,0 +1,9 @@
+FROM gcc:4.9
+
+WORKDIR /run
+
+ARG content=""
+
+RUN echo "$content" > code.c
+
+CMD ["/bin/sh", "-c", "gcc -o code code.c && ./code"]

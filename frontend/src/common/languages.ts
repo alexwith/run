@@ -16,3 +16,13 @@ languages.set("java", {
   }
 }`,
 });
+languages.set("c", {
+  name: "C",
+  image: "c",
+  example: `#include <stdio.h>
+
+  int main() {
+    printf("Hello, World!");
+    return 0;
+  }`,
+});
