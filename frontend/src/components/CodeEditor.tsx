@@ -1,10 +1,10 @@
-import { pythonLanguage } from "@codemirror/lang-python";
 import { tags } from "@lezer/highlight";
 import CodeMirror from "@uiw/react-codemirror";
 import { useStore } from "../store/store";
 import createTheme from "@uiw/codemirror-themes";
+import { languages } from "../common/languages";
 
-const myTheme = createTheme({
+const theme = createTheme({
   theme: "light",
   settings: {
     background: "#202127",
@@ -48,19 +48,30 @@ const myTheme = createTheme({
 });
 
 export default function CodeEditor() {
+  const language = useStore((state) => state.language);
   const code = useStore((state) => state.code);
 
   const setCode = useStore((actions) => actions.setCode);
 
+  const handleLoadExampleClick = () => {
+    setCode(languages.get(language.image)!.example);
+  };
+
   return (
-    <div className="border-[1px] border-light-gray rounded-lg overflow-hidden shadow-[0px_0px_35px_5px_rgba(56,_189,_248,_0.05)]">
+    <div className="relative border-[1px] border-light-gray rounded-lg overflow-hidden shadow-[0px_0px_35px_5px_rgba(56,_189,_248,_0.05)]">
       <CodeMirror
         height="350px"
         value={code}
-        extensions={[pythonLanguage]}
-        theme={myTheme}
+        extensions={[language.syntax]}
+        theme={theme}
         onChange={setCode}
       />
+      <div
+        className="absolute bottom-0 right-0 opacity-75 text-sm m-1 bg-light-gray text-gray font-bold px-2 rounded-md hover:cursor-pointer hover:bg-sky-400 hover:text-sky-900 hover:opacity-100"
+        onClick={handleLoadExampleClick}
+      >
+        Load example
+      </div>
     </div>
   );
 }
