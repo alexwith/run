@@ -7,9 +7,7 @@ import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
@@ -22,7 +20,8 @@ class ExecutionManager : KoinComponent {
     init {
         val serverSocket = aSocket(SelectorManager(Dispatchers.IO)).tcp().bind("127.0.0.1", 8083)
 
-        GlobalScope.launch {
+        val listeningScope = CoroutineScope(Dispatchers.IO)
+        listeningScope.launch {
             while (true) {
                 val socket = serverSocket.accept()
                 launch {

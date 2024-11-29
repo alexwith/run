@@ -1,58 +1,12 @@
-import { RunIcon, SettingsIcon } from "../common/icons";
-import { ProgramStatus } from "../common/types";
-import { useStore } from "../store/store";
+import { SettingsIcon } from "../common/icons";
 import Button from "./common/Button";
 import LanguageSelector from "./LanguageSelector";
+import RunButton from "./RunButton";
 
 export default function MenuBar() {
-  const language = useStore((state) => state.language);
-  const code = useStore((state) => state.code);
-
-  const setProgramStatus = useStore((actions) => actions.setProgramStatus);
-  const addToTerminal = useStore((actions) => actions.addToTerminal);
-  const clearTerminal = useStore((actions) => actions.clearTerminal);
-
-  const handleRunClick = () => {
-    clearTerminal();
-    setProgramStatus(null);
-
-    const socket = new WebSocket(
-      `ws://localhost:8080/socket/v1/execute?language=${language.image}`,
-    );
-    socket.onmessage = (event) => {
-      const { data } = event;
-      switch (data) {
-        case "run:ready": {
-          socket.send(code);
-          break;
-        }
-        case "run:building": {
-          setProgramStatus(ProgramStatus.Building);
-          break;
-        }
-        case "run:running": {
-          setProgramStatus(ProgramStatus.Running);
-          break;
-        }
-        case "run:failed": {
-          setProgramStatus(ProgramStatus.Failed);
-          break;
-        }
-        case "run:executed": {
-          setProgramStatus(ProgramStatus.Executed);
-          break;
-        }
-        default: {
-          addToTerminal(event.data);
-          break;
-        }
-      }
-    };
-  };
-
   return (
     <div className="flex justify-between">
-      <Button name="Run" icon={<RunIcon size={14} />} onClick={handleRunClick} />
+      <RunButton />
       <div className="flex gap-2">
         <LanguageSelector />
         <Button icon={<SettingsIcon size={20} />} />
