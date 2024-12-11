@@ -7,12 +7,12 @@ import { languages } from "../common/languages";
 const theme = createTheme({
   theme: "light",
   settings: {
-    background: "#202127",
+    background: "#1a1e25",
     foreground: "#787c99",
     caret: "#c0caf5",
     selection: "#515c7e40",
     selectionMatch: "#16161e",
-    gutterBackground: "#202127",
+    gutterBackground: "#1a1e25",
     gutterForeground: "#787c99",
     gutterBorder: "transparent",
     lineHighlight: "#474b6611",
@@ -58,7 +58,7 @@ export default function CodeEditor() {
   };
 
   return (
-    <div className="relative border-[1px] border-light-gray rounded-lg overflow-hidden shadow-[0px_0px_35px_5px_rgba(56,_189,_248,_0.05)]">
+    <div className="relative border-[1px] border-light-gray rounded-lg overflow-hidden">
       <CodeMirror
         height="350px"
         value={code}

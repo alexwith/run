@@ -10,17 +10,16 @@ export default function Terminal() {
   return (
     <div className="border-[1px] border-light-gray rounded-lg overflow-hidden bg-gray text-white text-sm p-2 font-[Tahoma]">
       <div className="flex justify-between border-b-2 border-light-gray">
-        <div className="flex items-center space-x-1 text-indigo-200">
-          <h1 className="font-bold">Terminal</h1>
+        <div className="flex items-center space-x-1">
+          <h1 className="font-bold text-">Terminal</h1>
           <TerminalIcon size={20} />
         </div>
-        {programStatus && <p className="text-xs text-sky-400 font-bold">{programStatus}</p>}
       </div>
       <div className="flex flex-col gap-[0.5px] mt-2 whitespace-pre-wrap font-mono text-s font-semibold">
         {terminal.map((line, i) => (
           <p
             key={i}
-            className="text-indigo-200"
+            className="text-white"
             dangerouslySetInnerHTML={{ __html: ansi.toHtml(line) }}
           ></p>
         ))}

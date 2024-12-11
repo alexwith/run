@@ -1,5 +1,6 @@
 import CodeEditor from "./components/CodeEditor";
 import MenuBar from "./components/MenuBar";
+import Timeline from "./components/timeline/Timeline";
 import Terminal from "./components/Terminal";
 
 function App() {
@@ -17,13 +18,14 @@ function App() {
               <span>Run</span>
             </h1>
           </div>
-          <p className="text-zinc-400 font-semibold text-xl">
+          <p className="text-zinc-500 font-semibold text-xl">
             Execute code quickly in the browser!
           </p>
         </div>
         <div className="flex flex-col gap-2 w-[650px]">
           <MenuBar />
           <CodeEditor />
+          <Timeline />
           <Terminal />
         </div>
       </div>

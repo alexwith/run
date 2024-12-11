@@ -4,9 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: "#1b1b1f",
-        gray: "#202127",
-        "light-gray": "#2b2f36",
+        dark: "#0c1014",
+        gray: "#1a1e25",
+        "light-gray": "#2c3140",
+      },
+      animation: {
+        "processing-bar": "processing_bar 5s linear infinite",
+      },
+      keyframes: {
+        processing_bar: {
+          "0%": { backgroundPosition: "500% 0%" },
+          "100%": { backgroundPosition: "0% 0%" },
+        },
       },
     },
   },
