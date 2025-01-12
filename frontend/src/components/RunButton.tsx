@@ -20,7 +20,7 @@ export default function RunButton() {
     }
 
     clearTerminal();
-    setProgramStatus(null);
+    setProgramStatus(ProgramStatus.Queueing);
 
     const localSocket = new WebSocket(
       `ws://localhost:8080/socket/v1/execute?language=${language.image}`,

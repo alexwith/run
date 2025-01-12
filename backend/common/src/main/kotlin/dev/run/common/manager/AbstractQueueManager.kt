@@ -9,7 +9,9 @@ abstract class AbstractQueueManager {
     protected val channel: Channel = this.connection.createChannel()
 
     init {
-        this.channel.queueDeclare(QUEUE_NAME, false, false, false, null)
+        this.channel.queueDeclare(QUEUE_NAME, false, false, false, mapOf(
+            "x-message-ttl" to 10000
+        ))
     }
 
     private fun createConnection(): Connection {

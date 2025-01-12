@@ -7,7 +7,9 @@ import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import io.ktor.websocket.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.*
@@ -18,25 +20,7 @@ class ExecutionManager : KoinComponent {
     private val languageManager by inject<LanguageManager>()
 
     init {
-        val serverSocket = aSocket(SelectorManager(Dispatchers.IO)).tcp().bind("127.0.0.1", 8083)
-
-        val listeningScope = CoroutineScope(Dispatchers.IO)
-        listeningScope.launch {
-            while (true) {
-                val socket = serverSocket.accept()
-                launch {
-                    val readChannel = socket.openReadChannel()
-                    val executionId = readChannel.readUTF8Line()
-                    val execution = this@ExecutionManager.executions[executionId!!.split(":")[1]]
-                    if (execution == null) {
-                        socket.close()
-                        return@launch
-                    }
-
-                    this@ExecutionManager.listenToWorker(socket, readChannel, execution)
-                }
-            }
-        }
+        this.workerConnectionListener()
     }
 
     suspend fun execute(language: String, socket: WebSocketSession) {
@@ -63,6 +47,27 @@ class ExecutionManager : KoinComponent {
         this.queueManager.enqueue(execution)
 
         execution.await()
+    }
+
+    private fun workerConnectionListener() {
+        val serverSocket = aSocket(SelectorManager(Dispatchers.IO)).tcp().bind("127.0.0.1", 8083)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            while (true) {
+                val socket = serverSocket.accept()
+                launch {
+                    val readChannel = socket.openReadChannel()
+                    val executionId = readChannel.readUTF8Line()
+                    val execution = this@ExecutionManager.executions[executionId!!.split(":")[1]]
+                    if (execution == null) {
+                        socket.close()
+                        return@launch
+                    }
+
+                    this@ExecutionManager.listenToWorker(socket, readChannel, execution)
+                }
+            }
+        }
     }
 
     private suspend fun listenToWorker(worker: Socket, channel: ByteReadChannel, execution: ApiExecution) {

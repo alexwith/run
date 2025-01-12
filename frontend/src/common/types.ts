@@ -1,8 +1,9 @@
 export enum ProgramStatus {
-  Building = 0,
-  Running = 1,
-  Failed = 2,
-  Executed = 3,
+  Queueing = 0,
+  Building = 1,
+  Running = 2,
+  Failed = 3,
+  Executed = 4,
 }
 
 export enum TimelineState {
