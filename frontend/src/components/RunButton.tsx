@@ -3,6 +3,7 @@ import Button from "./common/Button";
 import { useState } from "react";
 import { ProgramStatus } from "../common/types";
 import { useStore } from "../store/store";
+import { QUEUE_TIMEOUT } from "../common/constants";
 
 export default function RunButton() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -27,6 +28,11 @@ export default function RunButton() {
     );
     setSocket(localSocket);
 
+    const timeout = setTimeout(() => {
+      setSocket(null);
+      setProgramStatus(ProgramStatus.Failed);
+    }, QUEUE_TIMEOUT);
+
     localSocket.onmessage = (event) => {
       const { data } = event;
       switch (data) {
@@ -35,6 +41,7 @@ export default function RunButton() {
           break;
         }
         case "run:building": {
+          clearTimeout(timeout);
           setProgramStatus(ProgramStatus.Building);
           break;
         }
