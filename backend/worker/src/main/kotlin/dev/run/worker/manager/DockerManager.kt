@@ -15,6 +15,7 @@ class DockerManager {
         return this.runCommand(
             "docker",
             "build",
+            "--network=none",
             "--build-arg",
             "content=${execution.code}",
             "-t",
@@ -46,7 +47,15 @@ class DockerManager {
     }
 
     fun runContainer(execution: Execution, outputConsumer: suspend (outputLine: String) -> Unit) {
-        this.runCommand("docker", "run", "--rm", "--tty", execution.id) { process ->
+        this.runCommand(
+            "docker",
+            "run",
+            "--rm",
+            "--tty",
+            "--ulimit",
+            "cpu=1",
+            execution.id
+        ) { process ->
             val inputStream = BufferedReader(InputStreamReader(process.inputStream))
             val errorStream = BufferedReader(InputStreamReader(process.errorStream))
 
