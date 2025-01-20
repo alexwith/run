@@ -23,6 +23,7 @@ class ExecutionManager : KoinComponent {
 
         openSocket { channel ->
             channel.writeStringUtf8("run:${execution.id}\n")
+
             channel.writeStringUtf8("run:building\n")
 
             val success = this@ExecutionManager.dockerManager.buildImage(execution, language)
@@ -48,7 +49,6 @@ class ExecutionManager : KoinComponent {
             val socket = SOCKET_BUILDER.connect("127.0.0.1", 8083)
             val sendChannel = socket.openWriteChannel(true)
             consumer(sendChannel)
-
             socket.close()
         }
     }

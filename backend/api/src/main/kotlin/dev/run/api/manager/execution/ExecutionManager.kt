@@ -72,9 +72,9 @@ class ExecutionManager : KoinComponent {
 
     private suspend fun listenToWorker(worker: Socket, channel: ByteReadChannel, execution: ApiExecution) {
         while (true) {
-            val name = channel.readUTF8Line()
-            val args = name?.split(":")
-            if (name == null || args == null || args[0] != "run") {
+            val data = channel.readUTF8Line()
+            val args = data?.split(":")
+            if (data == null || args == null || args[0] != "run") {
                 worker.close()
                 execution.socketFuture.complete(null)
                 break
@@ -89,8 +89,8 @@ class ExecutionManager : KoinComponent {
                 "failed" -> executionSocket.send("run:failed")
                 "executed" -> executionSocket.send("run:executed")
                 "output" -> {
-                    val lastProtocolColonIndex = name.indexOf(":", 4) + 1
-                    val outputLine = name.substring(lastProtocolColonIndex)
+                    val lastProtocolColonIndex = data.indexOf(":", 4) + 1
+                    val outputLine = data.substring(lastProtocolColonIndex)
                     executionSocket.send(outputLine)
                 }
             }
