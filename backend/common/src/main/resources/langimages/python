@@ -4,6 +4,8 @@ WORKDIR /run
 
 ARG content=""
 
-RUN echo "$content" > code.py
+RUN cat <<EOF > code.py
+$content
+EOF
 
 CMD ["python", "code.py"]

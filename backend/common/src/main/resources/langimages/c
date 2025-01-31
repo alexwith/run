@@ -4,6 +4,8 @@ WORKDIR /run
 
 ARG content=""
 
-RUN echo "$content" > code.c
+RUN cat <<EOF > code.c
+$content
+EOF
 
 CMD ["/bin/sh", "-c", "gcc -o code code.c -std=c99 && ./code"]

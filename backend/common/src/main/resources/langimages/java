@@ -4,6 +4,8 @@ WORKDIR /run
 
 ARG content=""
 
-RUN echo "$content" > Main.java
+RUN cat <<EOF > Main.java
+$content
+EOF
 
 CMD ["/bin/sh", "-c", "javac Main.java && java Main"]

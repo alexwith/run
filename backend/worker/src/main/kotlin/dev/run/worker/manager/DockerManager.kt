@@ -96,6 +96,6 @@ class DockerManager {
     companion object {
         private const val TIMEOUT: Int = 8 // seconds
         private const val PROCESS_LIMIT: Int = 1 // processes
-        private const val MEMORY_LIMIT: String = "10m"
+        private const val MEMORY_LIMIT: String = "30m"
     }
 }
