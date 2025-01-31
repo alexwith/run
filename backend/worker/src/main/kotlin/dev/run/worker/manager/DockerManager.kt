@@ -54,6 +54,7 @@ class DockerManager {
             "--tty",
             "--ulimit",
             "cpu=1",
+            "--memory=10m",
             execution.id
         ) { process ->
             val inputStream = BufferedReader(InputStreamReader(process.inputStream))
