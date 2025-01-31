@@ -48,13 +48,16 @@ class DockerManager {
 
     fun runContainer(execution: Execution, outputConsumer: suspend (outputLine: String) -> Unit) {
         this.runCommand(
+            "timeout",
+            "--signal=SIGKILL",
+            "$TIMEOUT",
             "docker",
             "run",
             "--rm",
             "--tty",
             "--ulimit",
-            "cpu=1",
-            "--memory=10m",
+            "cpu=$PROCESS_LIMIT",
+            "--memory=$MEMORY_LIMIT",
             execution.id
         ) { process ->
             val inputStream = BufferedReader(InputStreamReader(process.inputStream))
@@ -80,7 +83,7 @@ class DockerManager {
 
             val result = processConsumer(process)
 
-            process.waitFor(60, TimeUnit.MINUTES)
+            process.waitFor(TIMEOUT.toLong(), TimeUnit.SECONDS)
 
             return result
         } catch (e: IOException) {
@@ -88,5 +91,11 @@ class DockerManager {
         }
 
         return null
+    }
+
+    companion object {
+        private const val TIMEOUT: Int = 8 // seconds
+        private const val PROCESS_LIMIT: Int = 1 // processes
+        private const val MEMORY_LIMIT: String = "10m"
     }
 }
