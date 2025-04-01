@@ -2,7 +2,6 @@ package dev.run.worker.manager
 
 import dev.run.common.entity.EmptyUnitContinuation
 import dev.run.common.entity.Execution
-import dev.run.common.manager.language.entity.Language
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -11,19 +10,19 @@ import kotlin.coroutines.startCoroutine
 
 class DockerManager {
 
-    fun buildImage(execution: Execution, language: Language): Boolean {
+    fun buildImage(execution: Execution): Boolean {
         return this.runCommand(
             "docker",
             "build",
             "--network=none",
-            "--build-arg",
-            "content=${execution.code}",
             "-t",
             execution.id,
-            "-f",
-            language.dockerfile.toString(),
-            "."
+            "-"
         ) { process ->
+            process.outputStream.bufferedWriter().use { writer ->
+                writer.write(execution.createImage())
+            }
+
             val infoStream = BufferedReader(InputStreamReader(process.errorStream))
 
             var outputLine: String?
@@ -77,6 +76,7 @@ class DockerManager {
     private fun <T> runCommand(vararg command: String, processConsumer: (process: Process) -> T? = { null }): T? {
         try {
             val process = ProcessBuilder(*command)
+                .redirectInput(ProcessBuilder.Redirect.PIPE)
                 .redirectOutput(ProcessBuilder.Redirect.PIPE)
                 .redirectError(ProcessBuilder.Redirect.PIPE)
                 .start()

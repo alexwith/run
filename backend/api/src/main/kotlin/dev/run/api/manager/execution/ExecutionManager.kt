@@ -2,7 +2,7 @@ package dev.run.api.manager.execution
 
 import dev.run.api.manager.QueueManager
 import dev.run.api.manager.execution.entity.ApiExecution
-import dev.run.common.manager.language.LanguageManager
+import dev.run.common.enums.Language
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
@@ -17,13 +17,12 @@ import java.util.*
 class ExecutionManager : KoinComponent {
     private val executions = HashMap<String, ApiExecution>()
     private val queueManager by inject<QueueManager>()
-    private val languageManager by inject<LanguageManager>()
 
     init {
         this.workerConnectionListener()
     }
 
-    suspend fun execute(language: String, socket: WebSocketSession) {
+    suspend fun execute(languageName: String, socket: WebSocketSession) {
         socket.send("run:ready")
 
         var code: String? = null
@@ -37,9 +36,7 @@ class ExecutionManager : KoinComponent {
             return
         }
 
-        if (languageManager.getLanguage(language) == null) {
-            return
-        }
+        val language = Language.from(languageName) ?: return
 
         val id = UUID.randomUUID().toString()
         val execution = ApiExecution(id, language, code, socket)
@@ -50,14 +47,17 @@ class ExecutionManager : KoinComponent {
     }
 
     private fun workerConnectionListener() {
-        val serverSocket = aSocket(SelectorManager(Dispatchers.IO)).tcp().bind("127.0.0.1", 8083)
+        val serverSocket = aSocket(SelectorManager(Dispatchers.IO)).tcp().bind("0.0.0.0", 8083)
 
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
                 val socket = serverSocket.accept()
+                println("connected to something")
                 launch {
                     val readChannel = socket.openReadChannel()
+                    println("reading from channel")
                     val executionId = readChannel.readUTF8Line()
+                    println("execution id: $executionId")
                     val execution = this@ExecutionManager.executions[executionId!!.split(":")[1]]
                     if (execution == null) {
                         socket.close()

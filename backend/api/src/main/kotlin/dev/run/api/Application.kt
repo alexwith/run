@@ -3,7 +3,6 @@ package dev.run.api
 import dev.run.api.manager.QueueManager
 import dev.run.api.manager.execution.ExecutionManager
 import dev.run.api.routes.routes
-import dev.run.common.manager.language.LanguageManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -13,6 +12,8 @@ import io.ktor.server.websocket.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 
+// docker build -f ./api/Dockerfile -t run-api .
+// docker run -d -p 8080:8080 --network=run --name run-api run-api
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
@@ -36,7 +37,6 @@ fun installKoin(app: Application) {
         modules(
             module {
                 single { QueueManager() }
-                single { LanguageManager() }
                 single { ExecutionManager() }
             }
         )

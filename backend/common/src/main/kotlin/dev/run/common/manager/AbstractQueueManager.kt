@@ -16,7 +16,8 @@ abstract class AbstractQueueManager {
 
     private fun createConnection(): Connection {
         val connectionFactory = ConnectionFactory()
-        connectionFactory.host = "localhost"
+        //connectionFactory.host = if (this.javaClass.name.contains("worker")) "localhost" else "host.docker.internal"//"localhost"
+        connectionFactory.host = "host.docker.internal"
 
         return connectionFactory.newConnection()
     }
