@@ -24,7 +24,7 @@ export default function RunButton() {
     setProgramStatus(ProgramStatus.Queueing);
 
     const localSocket = new WebSocket(
-      `ws://0.0.0.0:8080/socket/v1/execute?language=${language.image}`,
+      `wss://run.alexwith.com:8080/socket/v1/execute?language=${language.image}`,
     );
     setSocket(localSocket);
 
