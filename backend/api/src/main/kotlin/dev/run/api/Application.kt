@@ -22,6 +22,7 @@ fun main() {
 fun Application.module() {
     install(CORS) {
         allowHost("localhost:5173")
+        allowHost("run.alexwith.com")
         allowHeader(HttpHeaders.ContentType)
     }
 
