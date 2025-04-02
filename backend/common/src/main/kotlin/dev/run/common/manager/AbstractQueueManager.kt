@@ -9,15 +9,16 @@ abstract class AbstractQueueManager {
     protected val channel: Channel = this.connection.createChannel()
 
     init {
-        this.channel.queueDeclare(QUEUE_NAME, false, false, false, mapOf(
-            "x-message-ttl" to 10000
-        ))
+        this.channel.queueDeclare(
+            QUEUE_NAME, false, false, false, mapOf(
+                "x-message-ttl" to 10000
+            )
+        )
     }
 
     private fun createConnection(): Connection {
         val connectionFactory = ConnectionFactory()
-        //connectionFactory.host = if (this.javaClass.name.contains("worker")) "localhost" else "host.docker.internal"//"localhost"
-        connectionFactory.host = "host.docker.internal"
+        connectionFactory.host = "run-rabbitmq"
 
         return connectionFactory.newConnection()
     }

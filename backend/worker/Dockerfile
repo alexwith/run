@@ -10,7 +10,7 @@ COPY ../common ./common
 
 RUN chmod +x ./gradlew
 
-RUN ./gradlew :worker:build
+RUN ./gradlew :worker:build --no-daemon
 
 FROM eclipse-temurin:21-jre
 
