@@ -16,4 +16,4 @@
 
 ## Architecture
 Below is a rough sketch of Run's architecture
-![architecture](assets/run_architecture.png "Architecture")
+![architecture](assets/architecture.png "Architecture")
