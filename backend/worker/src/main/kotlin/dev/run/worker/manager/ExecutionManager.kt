@@ -39,7 +39,6 @@ class ExecutionManager : KoinComponent {
 
     private fun openSocket(consumer: suspend (channel: ByteWriteChannel) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
-            println("connecting")
             val socket = SOCKET_BUILDER.connect("run-api", 8083)
             val sendChannel = socket.openWriteChannel(true)
             consumer(sendChannel)

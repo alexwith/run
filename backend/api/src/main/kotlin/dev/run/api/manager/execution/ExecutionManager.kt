@@ -52,12 +52,9 @@ class ExecutionManager : KoinComponent {
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
                 val socket = serverSocket.accept()
-                println("connected to something")
                 launch {
                     val readChannel = socket.openReadChannel()
-                    println("reading from channel")
                     val executionId = readChannel.readUTF8Line()
-                    println("execution id: $executionId")
                     val execution = this@ExecutionManager.executions[executionId!!.split(":")[1]]
                     if (execution == null) {
                         socket.close()

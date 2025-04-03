@@ -12,8 +12,6 @@ import io.ktor.server.websocket.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
 
-// docker build -f ./api/Dockerfile -t run-api .
-// docker run -d -p 8080:8080 --network=run --name run-api run-api
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
