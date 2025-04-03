@@ -33,6 +33,7 @@ subprojects {
         implementation("com.rabbitmq:amqp-client:5.22.0")
         implementation("io.insert-koin:koin-core:4.0.0")
         implementation("io.insert-koin:koin-ktor:4.0.0")
+        implementation("io.github.cdimascio:dotenv-kotlin:6.5.1")
 
         testImplementation("io.ktor:ktor-server-test-host-jvm")
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

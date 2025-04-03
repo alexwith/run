@@ -18,6 +18,8 @@ WORKDIR /app
 
 COPY --from=build /app/api/build/libs/api-all.jar /app
 
+ENV RABBITMQ_HOST=run-rabbitmq
+
 EXPOSE 8080 8083
 
 CMD ["java", "-jar", "api-all.jar"]

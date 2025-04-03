@@ -24,7 +24,7 @@ export default function RunButton() {
     setProgramStatus(ProgramStatus.Queueing);
 
     const localSocket = new WebSocket(
-      `wss://run.alexwith.com/socket/v1/execute?language=${language.image}`,
+      `${import.meta.env.VITE_API_SOCKET_HOST}/socket/v1/execute?language=${language.image}`,
     );
     setSocket(localSocket);
 

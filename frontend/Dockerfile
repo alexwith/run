@@ -18,6 +18,8 @@ COPY --from=build /app/nginx.conf /etc/nginx/conf.d
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
+ENV VITE_API_SOCKET_HOST=wss://run.alexwith.com
+
 EXPOSE 80
 
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

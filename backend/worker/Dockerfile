@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y docker.io && apt-get install docker-bui
 
 COPY --from=build /app/worker/build/libs/worker-all.jar /app
 
+ENV RABBITMQ_HOST=run-rabbitmq
+ENV EXECUTION_SOCKET_HOST=run-api
+
 EXPOSE 8081 8083
 
 CMD ["java", "-jar", "worker-all.jar"]
