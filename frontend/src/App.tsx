@@ -18,11 +18,11 @@ function App() {
               <span>Run</span>
             </h1>
           </div>
-          <p className="text-zinc-500 font-semibold text-xl">
+          <p className="text-zinc-500 font-semibold text-xl text-center">
             Execute code quickly in the browser!
           </p>
         </div>
-        <div className="flex flex-col gap-2 w-[650px]">
+        <div className="flex flex-col gap-2 max-w-[650px] w-full px-5">
           <MenuBar />
           <CodeEditor />
           <Timeline />
