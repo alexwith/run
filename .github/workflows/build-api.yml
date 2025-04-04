@@ -3,6 +3,7 @@ name: Build API
 on:
     push:
         branches: [main]
+        paths: [backend/api/**, backend/common/**]
 
 env:
     REGISTRY: ghcr.io
@@ -32,7 +33,7 @@ jobs:
             - name: Build and push
               uses: docker/build-push-action@v6
               with:
-                  context: ./backend/api
+                  context: ./backend
                   platforms: linux/arm64
                   push: true
                   tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
