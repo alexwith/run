@@ -4,6 +4,7 @@ on:
     push:
         branches: [main]
         paths: [backend/api/**, backend/common/**]
+    workflow_dispatch:
 
 env:
     REGISTRY: ghcr.io
@@ -37,4 +38,4 @@ jobs:
                   file: ./backend/api/Dockerfile
                   platforms: linux/arm64
                   push: true
-                  tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
+                  tags: ${{ env.REGISTRY }}/${{ github.repository }}-api
