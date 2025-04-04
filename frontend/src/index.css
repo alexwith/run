@@ -1,6 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-dark: #0c1014;
+  --color-gray: #1a1e25;
+  --color-light-gray: #2c3140;
+
+  --animate-processing-bar: processing_bar 5s linear infinite;
+
+  @keyframes processing_bar {
+    0% {
+      background-position: 500% 0%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+}
 
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -13,5 +28,5 @@
     -moz-osx-font-smoothing: grayscale;
 
     color-scheme: dark;
-    background-color: theme("colors.dark");
+    background-color: var(--color-dark);
 }

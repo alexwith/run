@@ -16,11 +16,11 @@ export default function TimelineBar({ state }: Props) {
 
   return (
     <div
-      className="h-1 w-[170px] bg-sky-400 rounded-md bg-gradient-to-r from-light-gray via-sky-500 to-light-gray animate-processing-bar"
+      className="h-1 w-[170px] bg-sky-400 rounded-md bg-linear-to-r from-light-gray via-sky-500 to-light-gray animate-processing-bar"
       style={{ backgroundSize: "500%" }}
     >
       <div
-        className="absolute h-1 w-[170px] bg-sky-400 rounded-md bg-gradient-to-r from-light-gray to-sky-500 animate-processing-bar blur-md"
+        className="absolute h-1 w-[170px] bg-sky-400 rounded-md bg-linear-to-r from-light-gray to-sky-500 animate-processing-bar blur-md"
         style={{ backgroundSize: "500%" }}
       />
     </div>

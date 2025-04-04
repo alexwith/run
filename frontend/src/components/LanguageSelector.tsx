@@ -27,7 +27,7 @@ export default function LanguageSelector() {
       {hovering && (
         <div className="flex flex-col absolute z-10 bg-gray border-[1px] border-light-gray w-[150px] rounded-md right-0 py-1 px-2">
           <input
-            className="text-sm appearance-none focus:outline-none bg-transparent mb-1 pb-1 border-b-[1px] border-light-gray"
+            className="text-sm appearance-none focus:outline-hidden bg-transparent mb-1 pb-1 border-b-[1px] border-light-gray"
             type="text"
             placeholder="Search language"
             onChange={(event) => setFilter(event.currentTarget.value.toLowerCase())}
