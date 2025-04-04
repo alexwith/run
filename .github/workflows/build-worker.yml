@@ -3,7 +3,7 @@ name: Build Worker
 on:
     push:
         branches: [main]
-        paths: [backend/worker/**]
+        paths: [backend/worker/**, backend/common/**]
 
 env:
     REGISTRY: ghcr.io
