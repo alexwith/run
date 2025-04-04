@@ -4,7 +4,7 @@ on:
     push:
         branches: [main]
         paths: [backend/worker/**, backend/common/**]
-    workflow_dispatch
+    workflow_dispatch:
 
 env:
     REGISTRY: ghcr.io
