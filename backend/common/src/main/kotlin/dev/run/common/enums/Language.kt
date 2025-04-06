@@ -10,7 +10,7 @@ enum class Language(
 ) {
 
     PYTHON(
-        1,
+        2,
         "30m",
         5,
         """
@@ -26,7 +26,7 @@ enum class Language(
         """.trimIndent()
     ),
     JAVA(
-        1,
+        2,
         "50m",
         5,
         """
@@ -42,7 +42,7 @@ enum class Language(
         """.trimIndent()
     ),
     C(
-        1,
+        2,
         "30m",
         5,
         """
