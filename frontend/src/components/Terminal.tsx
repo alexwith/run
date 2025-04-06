@@ -8,7 +8,7 @@ export default function Terminal() {
   const programStatus = useStore((state) => state.programStatus);
 
   return (
-    <div className="border-[1px] border-light-gray rounded-lg overflow-hidden bg-gray text-white text-sm p-2 font-[Tahoma]">
+    <div className="border-[1px] border-light-gray rounded-lg overflow-hidden bg-gray text-white text-sm p-2">
       <div className="flex justify-between border-b-2 border-light-gray">
         <div className="flex items-center space-x-1">
           <h1 className="font-bold">Terminal</h1>
