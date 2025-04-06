@@ -3,10 +3,16 @@ package dev.run.common.enums
 // This is not a very pretty solution, but considering how difficult it is to read
 // files from the resources directory in a multi-module compiled jar I have gone with this solution
 enum class Language(
+    val processLimit: Int,
+    val memoryLimit: String,
+    val timeoutSeconds: Int,
     val image: String
 ) {
 
     PYTHON(
+        1,
+        "30m",
+        5,
         """
             FROM python:3.13.0-alpine
 
@@ -20,6 +26,9 @@ enum class Language(
         """.trimIndent()
     ),
     JAVA(
+        1,
+        "50m",
+        5,
         """
             FROM amazoncorretto:8-alpine3.17-jdk
 
@@ -33,6 +42,9 @@ enum class Language(
         """.trimIndent()
     ),
     C(
+        1,
+        "30m",
+        5,
         """
             FROM gcc:4.9
 

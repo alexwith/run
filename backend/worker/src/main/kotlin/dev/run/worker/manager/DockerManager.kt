@@ -12,6 +12,7 @@ class DockerManager {
 
     fun buildImage(execution: Execution): Boolean {
         return this.runCommand(
+            execution,
             "docker",
             "build",
             "--network=none",
@@ -38,6 +39,7 @@ class DockerManager {
 
     fun deleteImage(execution: Execution) {
         this.runCommand<Unit>(
+            execution,
             "docker",
             "rmi",
             "-f",
@@ -46,17 +48,20 @@ class DockerManager {
     }
 
     fun runContainer(execution: Execution, outputConsumer: suspend (outputLine: String) -> Unit) {
+        val language = execution.language
+
         this.runCommand(
+            execution,
             "timeout",
             "--signal=SIGKILL",
-            "$TIMEOUT",
+            "${language.timeoutSeconds}",
             "docker",
             "run",
             "--rm",
             "--tty",
             "--ulimit",
-            "cpu=$PROCESS_LIMIT",
-            "--memory=$MEMORY_LIMIT",
+            "cpu=${language.processLimit}",
+            "--memory=${language.memoryLimit}",
             execution.id
         ) { process ->
             val inputStream = BufferedReader(InputStreamReader(process.inputStream))
@@ -73,7 +78,11 @@ class DockerManager {
         }
     }
 
-    private fun <T> runCommand(vararg command: String, processConsumer: (process: Process) -> T? = { null }): T? {
+    private fun <T> runCommand(
+        execution: Execution,
+        vararg command: String,
+        processConsumer: (process: Process) -> T? = { null }
+    ): T? {
         try {
             val process = ProcessBuilder(*command)
                 .redirectInput(ProcessBuilder.Redirect.PIPE)
@@ -83,7 +92,7 @@ class DockerManager {
 
             val result = processConsumer(process)
 
-            process.waitFor(TIMEOUT.toLong(), TimeUnit.SECONDS)
+            process.waitFor(execution.language.timeoutSeconds.toLong(), TimeUnit.SECONDS)
 
             return result
         } catch (e: IOException) {
@@ -91,11 +100,5 @@ class DockerManager {
         }
 
         return null
-    }
-
-    companion object {
-        private const val TIMEOUT: Int = 5 // seconds
-        private const val PROCESS_LIMIT: Int = 1 // processes
-        private const val MEMORY_LIMIT: String = "30m"
     }
 }
